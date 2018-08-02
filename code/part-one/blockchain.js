@@ -22,8 +22,9 @@ class Transaction {
    *     other properties, signed with the provided private key
    */
   constructor(privateKey, recipient, amount) {
-    // Enter your solution here
-
+    this.privateKey = privateKey;
+    this.recipient = recipient;
+    this.amount = amount;
   }
 }
 
