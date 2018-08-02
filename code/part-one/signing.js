@@ -70,8 +70,8 @@ const sign = (privateKey, message) => {
   return secp256k1.sign(message, privateKey).signature.toString('hex');
 };
 
-const signature = sign(createPrivateKey(), 'Hello World!');
-console.log(signature);
+// const signature = sign(createPrivateKey(), 'Hello World!');
+// console.log(signature);
 
 /**
  * A function which takes a hex public key, a string message, and a hex
@@ -84,9 +84,19 @@ console.log(signature);
  *   // false
  */
 const verify = (publicKey, message, signature) => {
-  // Your code here
+  message = createHash('sha256').update(message).digest('hex');
 
+  message = Buffer.from(message, 'hex');
+  publicKey = Buffer.from(publicKey, 'hex');
+  signature = Buffer.from(signature, 'hex');
+
+  return secp256k1.verify(message, signature, publicKey);
 };
+
+// console.log( verify(getPublicKey(createPrivateKey()), 'Hello World!', signature) );
+// // true
+// console.log( verify(getPublicKey(createPrivateKey()), 'Hello World?', signature) );
+// // false
 
 module.exports = {
   createPrivateKey,
