@@ -45,8 +45,8 @@ const getPublicKey = (privateKey) => {
   return pubKey.toString('hex');
 };
 
-const publicKey = getPublicKey(createPrivateKey());
-console.log(publicKey);
+// const publicKey = getPublicKey(createPrivateKey());
+// console.log(publicKey);
 
 /**
  * A function which takes a hex private key and a string message, returning
@@ -62,9 +62,16 @@ console.log(publicKey);
  *   not the message itself!
  */
 const sign = (privateKey, message) => {
-  // Your code here
-
+  // hash message with SHA-256
+  privateKey = Buffer.from(privateKey, 'hex');
+  message = createHash('sha256').update(message).digest('hex');
+  message = Buffer.from(message, 'hex');
+  // sign the hashed message and privKey
+  return secp256k1.sign(message, privateKey).signature.toString('hex');
 };
+
+const signature = sign(createPrivateKey(), 'Hello World!');
+console.log(signature);
 
 /**
  * A function which takes a hex public key, a string message, and a hex
