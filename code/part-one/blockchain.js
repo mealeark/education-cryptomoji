@@ -26,6 +26,7 @@ class Transaction {
     this.recipient = recipient;
     this.amount = amount;
     this.source = signing.getPublicKey(this.privateKey);
+    this.signature = signing.sign(this.privateKey, this.source + this.recipient + this.amount);
   }
 }
 
