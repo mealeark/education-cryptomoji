@@ -38,8 +38,8 @@ console.log(privateKey);
  *   not hex strings! You'll have to convert the private key.
  */
 const getPublicKey = privateKey => {
-  // Your code here
-
+  // change priv key from string to buffer 
+  // use buffer to create public key
 };
 
 /**
