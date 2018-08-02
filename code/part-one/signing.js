@@ -21,8 +21,8 @@ const createPrivateKey = () => {
   return privKey.toString('hex');
 };
 
-const privateKey = createPrivateKey();
-console.log(privateKey);
+// const privateKey = createPrivateKey();
+// console.log(privateKey);
 
 /**
  * A function which takes a hexadecimal private key and returns its public pair
@@ -37,10 +37,16 @@ console.log(privateKey);
  *   Remember that the secp256k1-node library expects raw bytes (i.e Buffers),
  *   not hex strings! You'll have to convert the private key.
  */
-const getPublicKey = privateKey => {
+const getPublicKey = (privateKey) => {
   // change priv key from string to buffer 
+  let buf = Buffer.from(privateKey, 'hex');
   // use buffer to create public key
+  let pubKey = secp256k1.publicKeyCreate(buf);
+  return pubKey;
 };
+
+const publicKey = getPublicKey(createPrivateKey());
+console.log(publicKey);
 
 /**
  * A function which takes a hex private key and a string message, returning
