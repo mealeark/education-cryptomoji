@@ -64,8 +64,12 @@ class Block {
    */
   calculateHash(nonce) {
     this.nonce = nonce;
-    nonce = String(nonce);
-    this.hash = createHash('sha256').update(nonce).digest('hex');
+
+    let transactions = createHash('sha256').update(String(this.transactions)).digest('hex');
+    let previousHash = createHash('sha256').update(String(this.previousHash)).digest('hex');
+    nonce = createHash('sha256').update(String(nonce)).digest('hex');
+    this.hash = nonce + transactions + previousHash;
+
     return this.hash;
   }
 }
