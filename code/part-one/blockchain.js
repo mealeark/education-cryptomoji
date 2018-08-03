@@ -1,6 +1,6 @@
 'use strict';
 
-const { createHash } = require('crypto');
+const { createHash, randomBytes } = require('crypto');
 const signing = require('./signing');
 
 
@@ -49,8 +49,8 @@ class Block {
   constructor(transactions, previousHash) {
     this.transactions = transactions;
     this.previousHash = previousHash;
-    this.nonce = 0;
-    this.hash = null;
+    this.nonce = null;
+    this.hash = this.calculateHash(this.nonce);
   }
 
   /**
@@ -63,10 +63,24 @@ class Block {
    *   properties change.
    */
   calculateHash(nonce) {
-    let newHash = createHash('sha256').update(nonce).digest('hex');
-    this.hash = newHash;
+    this.nonce = nonce;
+    nonce = String(nonce);
+    return createHash('sha256').update(nonce).digest('hex');
   }
 }
+
+const signer = signing.createPrivateKey();
+const recipient = signing.getPublicKey(signing.createPrivateKey());
+const amount = Math.ceil(Math.random() * 100);
+
+const transactions = [ new Transaction(signer, recipient, amount) ];
+const previousHash = randomBytes(64).toString('hex');
+
+var block = new Block(transactions, previousHash);
+console.log('nonce 0', block.calculateHash(0))
+console.log('nonce 1', block.calculateHash(1))
+console.log('nonce 2', block.calculateHash(2))
+
 
 /**
  * A Blockchain class for storing an array of blocks, each of which is linked
