@@ -86,7 +86,6 @@ console.log('nonce 0', block.calculateHash(0))
 console.log('nonce 1', block.calculateHash(1))
 console.log('nonce 2', block.calculateHash(2))
 
-
 /**
  * A Blockchain class for storing an array of blocks, each of which is linked
  * to the previous block by their hashes. Includes methods for adding blocks,
