@@ -74,17 +74,17 @@ class Block {
   }
 }
 
-const signer = signing.createPrivateKey();
-const recipient = signing.getPublicKey(signing.createPrivateKey());
-const amount = Math.ceil(Math.random() * 100);
+// const signer = signing.createPrivateKey();
+// const recipient = signing.getPublicKey(signing.createPrivateKey());
+// const amount = Math.ceil(Math.random() * 100);
 
-const transactions = [ new Transaction(signer, recipient, amount) ];
-const previousHash = randomBytes(64).toString('hex');
+// const transactions = [ new Transaction(signer, recipient, amount) ];
+// const previousHash = randomBytes(64).toString('hex');
 
-var block = new Block(transactions, previousHash);
-console.log('nonce 0', block.calculateHash(0))
-console.log('nonce 1', block.calculateHash(1))
-console.log('nonce 2', block.calculateHash(2))
+// var block = new Block(transactions, previousHash);
+// console.log('nonce 0', block.calculateHash(0))
+// console.log('nonce 1', block.calculateHash(1))
+// console.log('nonce 2', block.calculateHash(2))
 
 /**
  * A Blockchain class for storing an array of blocks, each of which is linked
@@ -110,7 +110,7 @@ class Blockchain {
    */
   getHeadBlock() {
     // return head
-    return this.blocks[0];
+    return this.blocks[this.blocks.length - 1];
   }
 
   /**
@@ -118,8 +118,16 @@ class Blockchain {
    * adding it to the chain.
    */
   addBlock(transactions) {
-    // Your code here
+    // create new block with array of transactions and prev hash
+    let prevHash = this.blocks[this.blocks.length - 1].previousHash;
+    let newBlock = new Block(transactions, prevHash);
+    // new hash for prev block
+    newBlock.previousHash = createHash('sha256').update(String(prevHash)).digest('hex');
 
+    // push this new block onto chain of blocks
+    this.blocks.push(newBlock);
+    
+    return this.blocks;
   }
 
   /**
@@ -136,6 +144,14 @@ class Blockchain {
 
   }
 }
+
+let blockchain = new Blockchain();
+const signPerson = signing.createPrivateKey();
+const recipient1 = signing.getPublicKey(signing.createPrivateKey());
+const transaction = new Transaction(signPerson, recipient1, 100);
+blockchain.addBlock([transaction]);
+
+console.log(blockchain.blocks)
 
 module.exports = {
   Transaction,
