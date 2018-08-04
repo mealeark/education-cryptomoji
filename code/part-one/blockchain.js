@@ -140,18 +140,29 @@ class Blockchain {
    *   we make the blockchain mineable later.
    */
   getBalance(publicKey) {
-    // Your code here
-
+    let sum = 0;
+    // loop through each block's transactions
+    this.blocks.forEach(block => {
+      block.transactions.forEach(transaction => {
+        if (publicKey === transaction.recipient || publicKey === transaction.source) {
+          sum += transaction.amount;
+        }
+      });
+    });
+    return sum;
   }
 }
 
 let blockchain = new Blockchain();
-const signPerson = signing.createPrivateKey();
-const recipient1 = signing.getPublicKey(signing.createPrivateKey());
-const transaction = new Transaction(signPerson, recipient1, 100);
+const signer = signing.createPrivateKey();
+const recipient = signing.getPublicKey(signing.createPrivateKey());
+const transaction = new Transaction(signer, recipient, 100);
 blockchain.addBlock([transaction]);
 
-console.log(blockchain.blocks)
+// console.log(blockchain.getBalance(recipient)) // 100
+
+console.log(blockchain.getBalance(signing.getPublicKey(signer)))
+  // -100;
 
 module.exports = {
   Transaction,

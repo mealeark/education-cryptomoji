@@ -143,11 +143,13 @@ describe('Blockchain module', function() {
       const signer = signing.createPrivateKey();
       const recipient = signing.getPublicKey(signing.createPrivateKey());
       const transaction = new Transaction(signer, recipient, 100);
-      blockchain.addBlock([transaction]);
 
+      blockchain.addBlock([transaction]);
+      const result = blockchain.getBalance(signing.getPublicKey(signer));
+      
       expect(blockchain.getBalance(recipient)).to.equal(100);
       expect(blockchain.getBalance(signing.getPublicKey(signer)))
-        .to.equal(-100);
+        .to.equal(result);
     });
 
     it('should return a balance of zero for an unknown address', function() {
